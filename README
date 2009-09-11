@@ -1,0 +1,25 @@
+Sanitize Params
+===============
+
+Lets you add reasonably neat little blocks in your controllers to sanitize _id
+parameters when creating or updating records (the blocks are run on all POST/PUT methods).
+
+Example:
+
+  class ApplicationController < ActionController::Base
+    include SanitizeParams
+  end
+
+  class AccountController < ApplicationController
+    
+    # Return sanitized parameter value (params is updated accordingly)
+    sanitize_param :product, :image_id do |controller, param_value|
+      controller.current_user.images.find_by_id(param_value).try(:id)
+    end
+    
+    # You can also specify a controller method name instead of a block
+    sanitize_param :product, :image_id, :sanitize_image_id
+    
+  end
+
+Copyright (c) 2009 Tom Riley, released under the MIT license
